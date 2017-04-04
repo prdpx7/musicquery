@@ -76,7 +76,7 @@ class MusicQuery(object):
         if self.artist:
             self.all_song_path_list = [path for path in self.all_song_path_list
                                        if self._matched_song_with_artist(path)]
-        if self.song_path is None or isinstance(self.song_path) == list:
+        if self.song_path is None or isinstance(self.song_path, list):
             if self.all_song_path_list:
                 song_list_len = len(self.all_song_path_list) - 1
                 self.song_path = self.all_song_path_list[random.randint(0, song_list_len)]

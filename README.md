@@ -11,7 +11,7 @@ with all existing songs in music_dir
 pip install musicquery
 ```
 ## Usage
-```
+```python
 >>> from musicquery import MusicQuery
 >>> obj = MusicQuery(music_dir='~/Music', artist='weeknd')
 >>> # when there are more than one song in `all_song_path_list` then it will select a random `song_path`
@@ -34,7 +34,8 @@ pip install musicquery
     'title': u'False Alarm'
     }
 >>> obj = MusicQuery(music_dir='~/Music/', title='Fire')
->>> {'all_song_path_list': [
+>>> obj.__dict__
+  {'all_song_path_list': [
           '/home/zuck007/Music/Loyd Banks - On Fire.mp3',
           '/home/zuck007/Music/Lil Wayne - Fireman.mp3',
           '/home/zuck007/Music/22 P!NK - Just Like Fire (From Alice.m4a',
@@ -47,7 +48,7 @@ pip install musicquery
      'song_path': '/home/zuck007/Music/Lil Wayne - Fireman.mp3',
      'status': 'ok',
      'title': u'Fireman'
-     }
+  }
 ```
 ## Demo
 ![GithubSnap](./screenshot.png)
