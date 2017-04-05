@@ -6,6 +6,7 @@ import re
 import os
 import random
 import tinytag
+import platform
 class MusicQuery(object):
     """
     def __init__(self, music_dir, title=None, artist=None, genre=None)
@@ -17,6 +18,46 @@ class MusicQuery(object):
             'status':'unable to find song_path for given args',
             'error':'music_dir does not exists'
     """
+    def __init__(self, music_dir, title=None, artist=None, genre=None):
+        if platform.system() == 'Windows':
+            sep = '\\'
+        else:
+            sep = '/'
+        self.music_dir = os.path.abspath(os.path.expanduser(music_dir)) + sep
+        self.title = title
+        self.artist = artist
+        self.genre = genre
+        self.status = 'ok'
+        self.song_path = None
+        self.error = None
+        self.all_song_path_list = []
+        if not os.path.exists(self.music_dir) or not os.path.isdir(self.music_dir):
+            self.status = 'unable to find song_path'
+            self.error = 'invalid path `%s`'%(self.music_dir)
+            return None
+        else:
+            self.all_song_path_list = filter(self._is_audio_file, map(lambda file_name: self.music_dir + file_name, os.listdir(self.music_dir)))
+        if self.genre:
+            self.all_song_path_list = [path for path in self.all_song_path_list
+                                       if self._matched_song_with_genre(path)]
+        if self.title:
+            self.all_song_path_list = [path for path in self.all_song_path_list
+                                       if self._matched_song_with_title(path)]
+            if self.artist:
+                self.song_path = filter(self._matched_song_with_artist, self.all_song_path_list)
+
+        if self.artist:
+            self.all_song_path_list = [path for path in self.all_song_path_list
+                                       if self._matched_song_with_artist(path)]
+        if self.song_path is None or isinstance(self.song_path, list):
+            if self.all_song_path_list:
+                song_list_len = len(self.all_song_path_list) - 1
+                self.song_path = self.all_song_path_list[random.randint(0, song_list_len)]
+                self._set_tags()
+            else:
+                self.status = 'unable to find song_path'
+                self.error = 'can not find any matching song tags with given args'
+
     def _clean_tag(self, tag):
         if tag is None:
             return "Unknown"
@@ -48,43 +89,22 @@ class MusicQuery(object):
         self.artist = self._clean_tag(artist)
         genre = tinytag.TinyTag.get(self.song_path).genre
         self.genre = self._clean_tag(genre)
-
-    def __init__(self, music_dir, title=None, artist=None, genre=None):
-        self.music_dir = os.path.expanduser(music_dir)
-        self.title = title
-        self.artist = artist
-        self.genre = genre
-        self.status = 'ok'
-        self.song_path = None
-        self.error = None
-        self.all_song_path_list = []
-        if not os.path.exists(self.music_dir):
-            self.status = 'unable to find song_path'
-            self.error = 'invalid path `%s`'%(self.music_dir)
-            return None
-        else:
-            self.all_song_path_list = map(lambda x: self.music_dir + x, os.listdir(self.music_dir))
-        if self.genre:
-            self.all_song_path_list = [path for path in self.all_song_path_list
-                                       if self._matched_song_with_genre(path)]
-        if self.title:
-            self.all_song_path_list = [path for path in self.all_song_path_list
-                                       if self._matched_song_with_title(path)]
-            if self.artist:
-                self.song_path = filter(self._matched_song_with_artist, self.all_song_path_list)
-
-        if self.artist:
-            self.all_song_path_list = [path for path in self.all_song_path_list
-                                       if self._matched_song_with_artist(path)]
-        if self.song_path is None or isinstance(self.song_path, list):
-            if self.all_song_path_list:
-                song_list_len = len(self.all_song_path_list) - 1
-                self.song_path = self.all_song_path_list[random.randint(0, song_list_len)]
-                self._set_tags()
+    def _is_audio_file(self, file_path):
+        music_formats = ['.mp3', '.oga', '.ogg', '.opus', '.wav', '.flac', '.wma', '.m4a', '.mp4']
+        base_file, extension = os.path.splitext(file_path)
+        if os.path.isfile(file_path) is True:
+            if extension in music_formats:
+                try:
+                    music_file = tinytag.TinyTag.get(file_path)
+                    if music_file.bitrate > 0:
+                        return True
+                    return False
+                except Exception as InvalidMusicFile:
+                    return False
             else:
-                self.status = 'unable to find song_path'
-                self.error = 'can not find any matching song tags with given args'
-
+                return False
+        return False
+   
     def __str__(self):
         return  str({'artist':self.artist,
                      'title':self.title,
