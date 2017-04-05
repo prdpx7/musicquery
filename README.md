@@ -3,6 +3,7 @@
 > A Python package which returns song_path after matching given query
 with all existing songs in music_dir
 
+[![Build Status](https://travis-ci.org/zuck007/musicquery.svg?branch=master)](https://travis-ci.org/zuck007/musicquery)
 [![MITlicensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/zuck007/musicquery/master/LICENSE) 
 [![PyPI version](https://badge.fury.io/py/musicquery.svg)](https://badge.fury.io/py/musicquery)
 
