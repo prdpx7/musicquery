@@ -36,7 +36,7 @@ class MusicQuery(object):
             self.error = 'invalid path `%s`'%(self.music_dir)
             return None
         else:
-            self.all_song_path_list = filter(self._is_audio_file, map(lambda file_name: self.music_dir + file_name, os.listdir(self.music_dir)))
+            self.all_song_path_list = [path for path in map(lambda file_name: self.music_dir + file_name, os.listdir(self.music_dir)) if self._is_audio_file(path)]
         if self.genre:
             self.all_song_path_list = [path for path in self.all_song_path_list
                                        if self._matched_song_with_genre(path)]

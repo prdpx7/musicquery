@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name="musicquery",
-      version="0.21",
+      version="0.22",
       test_suite='nose.collector',
       tests_require=['nose'],
       description="Get song_path from matched arguments with song tags",
