@@ -1,4 +1,4 @@
 """
 Just Python things
 """
-from musicquery import MusicQuery
+from .musicquery import MusicQuery
