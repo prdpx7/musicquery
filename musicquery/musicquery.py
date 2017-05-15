@@ -98,11 +98,8 @@ class MusicQuery(object):
                     music_file = tinytag.TinyTag.get(file_path)
                     if music_file.bitrate > 0:
                         return True
-                    return False
                 except Exception as InvalidMusicFile:
                     return False
-            else:
-                return False
         return False
    
     def __str__(self):

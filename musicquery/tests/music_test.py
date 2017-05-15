@@ -14,3 +14,12 @@ class TestMusic(TestCase):
         test_obj = musicquery.MusicQuery(music_dir=self.base_path+self.music_dir, genre='simple')
         print(test_obj)
         self.assertTrue(test_obj.song_path, self.base_path+self.music_dir+'twinkle.mp3')
+    def test_artist(self):
+        test_obj = musicquery.MusicQuery(music_dir=self.base_path+self.music_dir, artist='dimensionbucket')
+        print(test_obj)
+        self.assertTrue(test_obj.song_path, self.base_path+self.music_dir+'twinkle.mp3')
+    def test_error(self):
+        test_obj = musicquery.MusicQuery(music_dir=self.base_path+self.music_dir, genre='rap')
+        print(test_obj)
+        self.assertTrue(test_obj.status, 'unable to find song_path')
+
